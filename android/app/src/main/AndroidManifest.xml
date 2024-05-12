@@ -3,6 +3,25 @@
         android:label="graduateproject"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Add the following meta-data for Firebase -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        <meta-data
+            android:name="com.google.firebase.auth.CLIENT_ID"
+            android:value="@string/default_web_client_id" />
+
+        <!-- Add the intent filter for Google Sign-In -->
+        <activity
+            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="com.google.android.gms.auth.GOOGLE_SIGN_IN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

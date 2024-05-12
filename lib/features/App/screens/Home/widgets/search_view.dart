@@ -55,6 +55,7 @@ class SearchView extends StatelessWidget {
                                   doc: doc,
                                 ));
                           },
+                      isFavorite: doc['isFavorite'] ?? false,
                         );
                 },
               ),

@@ -85,30 +85,6 @@ class AuthController extends GetxController {
     }
   }
 
-  // loginUser() async {
-  //   if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-  //     THelperFunctions.showSnackBar("Please fill in all fields");
-  //     return;
-  //   }
-
-  //   try {
-  //     userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //       email: emailController.text,
-  //       password: passwordController.text,
-  //     );
-  //   } on FirebaseAuthException catch (e) {
-  //     if (e.code == 'user-not-found') {
-  //       THelperFunctions.showSnackBar("No user found for that email");
-  //     } else if (e.code == 'wrong-password') {
-  //       THelperFunctions.showSnackBar("Wrong password provided for that email");
-  //     } else {
-  //       THelperFunctions.showSnackBar("An error occurred during sign in");
-  //     }
-  //   } catch (e) {
-  //     print('Error during sign in: $e');
-  //     THelperFunctions.showSnackBar("An error occurred during sign in");
-  //   }
-  // }
 
   signupUser(bool isDoctor, List<String> selectedDays) async {
     if (fullnameController.text.isEmpty ||
@@ -128,7 +104,7 @@ class AuthController extends GetxController {
       );
 
       await storeUserData(userCredential!.user!.uid, fullnameController.text,
-          emailController.text, isDoctor,selectedDays);
+          emailController.text, isDoctor, selectedDays);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         THelperFunctions.showSnackBar("The email address is already in use");
@@ -153,15 +129,13 @@ class AuthController extends GetxController {
     }
   }
 
-  storeUserData(
-      String uid, String fullname, String email, bool isDoctor, List<String> availableDays) async {
+  storeUserData(String uid, String fullname, String email, bool isDoctor,
+      List<String> availableDays) async {
     var store = FirebaseFirestore.instance
         .collection(isDoctor ? 'doctors' : 'users')
         .doc(uid);
 
-    var store2 = FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid);
+    var store2 = FirebaseFirestore.instance.collection('users').doc(uid);
     if (isDoctor) {
       await store.set({
         'docAbout': aboutController.text,
@@ -176,7 +150,8 @@ class AuthController extends GetxController {
         'docId': FirebaseAuth.instance.currentUser?.uid,
         'docRating': 1,
         'docEmail': email,
-        'availableDays' : FieldValue.arrayUnion(availableDays),
+        'availableDays': FieldValue.arrayUnion(availableDays),
+        'isFavorite': false,
       });
     } else {
       await store.set({
@@ -189,101 +164,20 @@ class AuthController extends GetxController {
         'last_activated': DateTime.now().toString(),
         'puch_token': '',
         'online': false,
-
       });
     }
-    // if (isDoctor) {
-    //   await store2.set({
-    //     'docAbout': aboutController.text,
-    //     'docAddress': addressController.text,
-    //     'docCategory': categoryslected,
-    //     'docName': fullname,
-    //     'docPhone': phoneController.text,
-    //     'docService': servicesController.text,
-    //     'docTimingfrom': timingControllerfrom.text,
-    //     'docTimingto': timingControllerto.text,
-    //     'docSalary': salaryController.text,
-    //     'docId': FirebaseAuth.instance.currentUser?.uid,
-    //     'docRating': 1,
-    //     'docEmail': email,
-    //     'availableDays' : FieldValue.arrayUnion(availableDays),
-    //   });
-    // }
-
   }
-
-  //   Future<List <DoctorCardVertical>>getfavoriteDoctor(List<String>doctors)async{
-  //   try {
-  //     var db =  FirebaseFirestore.instance;
-
-  //     final snapshot=await db.collection('doctors').where(FieldPath.documentId,whereIn: doctors).get();
-  //     return snapshot.docs.map((querysnapshot) => ,).toList();
-
-  //   }on FirebaseAuthException catch (e) {
-
-  //   }on PlatformException catch (e) {
-
-  //   }on catch (e) {
-
-  //   }
-  // }
 
   signout() async {
     await FirebaseAuth.instance.signOut().then((value) {
       Get.offAll(() => const LoginView());
     }); //=> const LoginView()
-    print('===========================${FirebaseAuth.instance.currentUser?.uid}==================================');
+    print(
+        '===========================${FirebaseAuth.instance.currentUser?.uid}==================================');
   }
 
   void clearControllers() {
     emailController.clear();
     passwordController.clear();
   }
-
-  // void updateDoctorAvailableDays(List<String> availableDays) async {
-  //   // Assuming you have a reference to the Firestore instance
-  //   final firestore = FirebaseFirestore.instance;
-  //
-  //   try {
-  //     // Update the document for the current doctor
-  //     await firestore.collection('doctors').doc('docId').update({
-  //       'availableDays': availableDays,
-  //     });
-  //     print('Available days updated successfully!');
-  //   } catch (e) {
-  //     print('Error updating available days: $e');
-  //   }
-  // }
-
-
-  // void updateDoctorAvailableDays(List<String> availableDays) async {
-  //   print('Available days updated successfully!'+ availableDays.toString());
-  //   try {
-  //
-  //
-  //     // Get the current user's ID
-  //     String? userId = FirebaseAuth.instance.currentUser?.uid;
-  //
-  //     // Reference to the Firestore collection
-  //     final firestore = FirebaseFirestore.instance;
-  //
-  //     // Update the document for the current doctor
-  //     await firestore.collection('doctors').doc(userId).update({
-  //
-  //     });
-  //
-  //   } catch (e) {
-  //     print('Error updating available days: $e');
-  //   }
-  // }
-
-
-
-
-
-
-
-
-
-
 }

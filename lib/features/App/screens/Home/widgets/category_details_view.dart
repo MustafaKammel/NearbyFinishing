@@ -58,6 +58,7 @@ class CategoryDetailsView extends StatelessWidget {
                             doc: data[index],
                           ));
                     },
+                      isFavorite: data[index]['isFavorite'] ?? false,
                   );
                   // return Container(
                   //   padding: const EdgeInsets.only(left: 10, bottom: 10),

@@ -67,4 +67,8 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation 'com.google.firebase:firebase-auth:21.0.1' // Add Firebase Authentication dependency
+    implementation 'com.google.firebase:firebase-core:20.0.0' // Add Firebase Core dependency
+
+}

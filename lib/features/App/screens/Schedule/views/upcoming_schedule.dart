@@ -29,13 +29,7 @@ class Upcomingschedule extends StatelessWidget {
           "My Appoinments",
           style: Theme.of(context).textTheme.headlineMedium,
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                AuthController().signout();
-              },
-              icon: const Icon(Icons.power_settings_new_rounded))
-        ],
+
       ),
 
       body:StreamBuilder<QuerySnapshot>(
