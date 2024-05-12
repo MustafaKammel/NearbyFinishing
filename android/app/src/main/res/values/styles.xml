@@ -16,6 +16,9 @@
          running.
 
          This Theme is only used starting with V2 of Flutter's Android embedding. -->
+    <string name="default_notification_channel_id">YOUR_NOTIFICATION_CHANNEL_ID_HERE</string>
+    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID_HERE</string>
+
     <style name="NormalTheme" parent="Theme.MaterialComponents">    
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
