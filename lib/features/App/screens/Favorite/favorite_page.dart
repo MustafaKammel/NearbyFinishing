@@ -29,7 +29,7 @@ class FavoriteScreen extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (snapshot.data!.isEmpty) {
-            return Center(child: Text('No favorite doctors found.'));
+            return Center(child: Text('No favorite doctors found'));
           }
           if (!snapshot.hasData) {
             return const Center(
