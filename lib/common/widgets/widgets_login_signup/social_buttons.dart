@@ -25,11 +25,13 @@ class SocialButtons extends StatelessWidget {
             onPressed: () async {
               try {
                 await signInWithGoogle();
-                Get.offAll(() => HomePage());
               } catch (e) {
                 print("Error signing in with Google: $e");
                 // Handle error here
+                return;
               }
+              // Navigate to Home page after successful sign-in
+              Get.offAll(() => HomePage());
             },
             icon: const Image(
               width: TSizes.iconMd,
@@ -62,27 +64,29 @@ class SocialButtons extends StatelessWidget {
   }
 
   Future<void> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    if (googleUser == null) {
-      throw FirebaseAuthException(
-        code: 'ERROR_ABORTED_BY_USER',
-        message: 'Sign in aborted by user',
+      if (googleUser == null) {
+        throw FirebaseAuthException(
+          code: 'ERROR_ABORTED_BY_USER',
+          message: 'Sign in aborted by user',
+        );
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      print("Error signing in with Google: $e");
+      // Handle error here
+      rethrow; // Rethrow the error to propagate it to the caller
     }
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth =
-    await googleUser.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    // Sign in to Firebase with the credential
-    await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

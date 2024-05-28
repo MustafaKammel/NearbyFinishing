@@ -6,10 +6,15 @@ import '../../../../../common/widgets/Doctors/doctor_card_vertical.dart';
 import '../../../../../common/widgets/app_bar/appbar.dart';
 import '../../../../../utils/consts/consts.dart';
 
-class CategoryDetailsView extends StatelessWidget {
+class CategoryDetailsView extends StatefulWidget {
   final String catName;
   const CategoryDetailsView({super.key, required this.catName});
 
+  @override
+  State<CategoryDetailsView> createState() => _CategoryDetailsViewState();
+}
+
+class _CategoryDetailsViewState extends State<CategoryDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +22,7 @@ class CategoryDetailsView extends StatelessWidget {
         showBackArrow: true,
         leadingOnPress: () => Get.back(),
         title: Text(
-          catName,
+          widget.catName,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
@@ -29,7 +34,7 @@ class CategoryDetailsView extends StatelessWidget {
       body: FutureBuilder<QuerySnapshot>(
         future: FirebaseFirestore.instance
             .collection('doctors')
-            .where('docCategory', isEqualTo: catName)
+            .where('docCategory', isEqualTo: widget.catName)
             .get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -58,46 +63,8 @@ class CategoryDetailsView extends StatelessWidget {
                             doc: data[index],
                           ));
                     },
-                      isFavorite: data[index]['isFavorite'] ?? false,
+                      isFavorite: data[index]['isFavorite'] ?? false, docId: data![index]['docId'],
                   );
-                  // return Container(
-                  //   padding: const EdgeInsets.only(left: 10, bottom: 10),
-                  //   clipBehavior: Clip.hardEdge,
-                  //   decoration: BoxDecoration(
-                  //       color: Colors.black12,
-                  //       borderRadius: BorderRadius.circular(16)),
-                  //   margin: const EdgeInsets.only(right: 8),
-                  //   width: 150,
-                  //   height: 100,
-                  //   child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       children: [
-                  //         Container(
-                  //           alignment: Alignment.center,
-                  //           child: Image.asset(
-                  //             doctor,
-                  //             width: 170,
-                  //             scale: 50,
-                  //             fit: BoxFit.cover,
-                  //           ),
-                  //         ),
-                  //         5.heightBox,
-                  //         AppStyle.normal(
-                  //             title: data![index]['docName'],
-                  //             color: Colors.black),
-                  //         VxRating(
-                  //           onRatingUpdate: (value) {},
-                  //           count: 5,
-                  //           value: double.parse(
-                  //               data[index]['docRating'].toString()),
-                  //           stepInt: true,
-                  //           selectionColor: Colors.yellowAccent,
-                  //           maxRating: 5,
-                  //         ),
-                  //       ]),
-                  // ).onTap(() {
-                  //   Get.to(() => DoctorProfileView(doc: data[index]));
-                  // });
                 },
               ),
             );

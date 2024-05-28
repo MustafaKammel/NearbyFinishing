@@ -6,10 +6,15 @@ import '../../../../../common/widgets/Doctors/doctor_card_vertical.dart';
 import '../../../../../common/widgets/app_bar/appbar.dart';
 import '../../../../../views/doctor_profile_view/doctor_profile_view.dart';
 
-class SearchView extends StatelessWidget {
+class SearchView extends StatefulWidget {
   final String searchQuery;
   const SearchView({super.key, required this.searchQuery});
 
+  @override
+  State<SearchView> createState() => _SearchViewState();
+}
+
+class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +49,7 @@ class SearchView extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   var doc = snapshot.data!.docs[index];
                   return !(doc['docName'].toString().toLowerCase())
-                          .contains(searchQuery.toLowerCase())
+                          .contains(widget.searchQuery.toLowerCase())
                       ? const SizedBox.shrink()
                       : DoctorCardVertical(
                           image: doctor,
@@ -55,7 +60,7 @@ class SearchView extends StatelessWidget {
                                   doc: doc,
                                 ));
                           },
-                      isFavorite: doc['isFavorite'] ?? false,
+                      isFavorite: doc['isFavorite'] ?? false, docId:doc['docId'],
                         );
                 },
               ),

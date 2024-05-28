@@ -73,7 +73,7 @@ class AuthController extends GetxController {
       emailController.clear();
       passwordController.clear();
     } catch (e) {
-      String errorMessage = "An error occurred. Please try again later.";
+      String errorMessage = "An error occurred!!,Wrong password or No user found for that email.";
       if (e is FirebaseAuthException) {
         if (e.code == 'user-not-found') {
           errorMessage = "No user found for that email.";
