@@ -3,31 +3,37 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import '../../../../../common/widgets/app_bar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
 import '../../../../../views/appointment_details_view/appointment_details_view.dart';
 import '../../../features/App/controllers/appointment_controller.dart';
+import '../../../features/Notifications/notifications_services.dart';
 import '../../../features/authentication/controllers/auth_controller.dart';
 
-
-class Doc_booking extends StatelessWidget {
+class Doc_booking extends StatefulWidget {
   final bool isDoctor;
   const Doc_booking({super.key, this.isDoctor = false});
 
+  @override
+  State<Doc_booking> createState() => _DocBookingState();
+}
+
+class _DocBookingState extends State<Doc_booking> {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(AppointmnetController());
     final dark = THelperFunctions.isDarkMode(context);
     Size size = MediaQuery.of(context).size;
-
+    NotificationsServices().showBasicNotification();
     return Scaffold(
       appBar: AppBarWidget(
         showBackArrow: true,
         leadingOnPress: () => Get.back(),
         title: Text(
-          "My Appoinments",
+          "My Appointments",
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         actions: [
@@ -38,15 +44,12 @@ class Doc_booking extends StatelessWidget {
               icon: const Icon(Icons.power_settings_new_rounded))
         ],
       ),
-
-      body:StreamBuilder<QuerySnapshot>(
-          stream:
-          FirebaseFirestore.instance
+      body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
               .collection('appointments')
               .where('serviceId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
               .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             DateTime end, start;
             if (!snapshot.hasData) {
               return const Center(
@@ -56,17 +59,18 @@ class Doc_booking extends StatelessWidget {
               var data = snapshot.data?.docs;
               if (data!.isEmpty) {
                 return Center(
-                  child: Text(
-                    'No appointments!',
-                    style: TextStyle(
-                      fontSize: 18, // Adjust font size as needed
-                      fontWeight: FontWeight.bold, // Make the text bold
-                      color: Colors.grey[600], // Set text color to grey
-                    ),
-                    textAlign: TextAlign.center, // Center-align the text
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset('assets/Animations/Sad.json'),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'No appointments found!',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
                   ),
                 );
-
               }
               return Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -110,9 +114,7 @@ class Doc_booking extends StatelessWidget {
                                       .textTheme
                                       .bodyLarge!
                                       .apply(
-                                    color: dark
-                                        ? MColors.white
-                                        : MColors.black,
+                                    color: dark ? MColors.white : MColors.black,
                                   ),
                                 ),
                                 subtitle: Text(
@@ -121,22 +123,55 @@ class Doc_booking extends StatelessWidget {
                                       .textTheme
                                       .labelSmall!
                                       .apply(
-                                    color: dark
-                                        ? MColors.white
-                                        : MColors.black,
+                                    color: dark ? MColors.white : MColors.black,
                                   ),
                                 ),
                                 trailing: IconButton(
-                                    onPressed: () {
-                                      FirebaseFirestore.instance
-                                          .collection('appointments')
-                                          .doc(data[index].id)
-                                          .delete();
-                                    },
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    )),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text("Confirm Deletion"),
+                                          content: const Text("Are you sure you want to delete this appointment?"),
+                                          actions: [
+                                            TextButton(
+                                              child: const Text("Cancel"),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Text("Delete"),
+                                              onPressed: () {
+                                                FirebaseFirestore.instance
+                                                    .collection('appointments')
+                                                    .doc(data[index].id)
+                                                    .delete()
+                                                    .then((value) {
+                                                  FirebaseFirestore.instance
+                                                      .collection('notifications')
+                                                      .add({
+                                                    'uid': data[index]['userId'],
+                                                    'title': 'Medical Appointments',
+                                                    'body': 'Canceled by Dr : ${data[index]['userName']}',
+                                                    'Date': DateTime.now().toString(),
+                                                    'isShow': false,
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                ),
                                 leading: const CircleAvatar(
                                   radius: 25,
                                   backgroundImage: AssetImage(
@@ -151,16 +186,13 @@ class Doc_booking extends StatelessWidget {
                                 ),
                               ),
                               Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Row(
                                     children: [
                                       Icon(
                                         Icons.calendar_month,
-                                        color: dark
-                                            ? MColors.white
-                                            : MColors.black,
+                                        color: dark ? MColors.white : MColors.black,
                                       ),
                                       const SizedBox(
                                         width: TSizes.xs,
@@ -168,24 +200,19 @@ class Doc_booking extends StatelessWidget {
                                       Text(
                                         datestart,
                                         style: TextStyle(
-                                          color: dark
-                                              ? MColors.white
-                                              : MColors.black,
+                                          color: dark ? MColors.white : MColors.black,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       Row(
                                         children: [
                                           Icon(
                                             Icons.access_time_filled,
-                                            color: dark
-                                                ? MColors.white
-                                                : MColors.black,
+                                            color: dark ? MColors.white : MColors.black,
                                           ),
                                           const SizedBox(
                                             width: TSizes.xs,
@@ -193,11 +220,9 @@ class Doc_booking extends StatelessWidget {
                                           Text(
                                             timestart,
                                             style: TextStyle(
-                                              color: dark
-                                                  ? MColors.white
-                                                  : MColors.black,
+                                              color: dark ? MColors.white : MColors.black,
                                             ),
-                                          )
+                                          ),
                                         ],
                                       ),
                                     ],
@@ -216,13 +241,11 @@ class Doc_booking extends StatelessWidget {
                                       Text(
                                         "Confirmed",
                                         style: TextStyle(
-                                          color: dark
-                                              ? MColors.white
-                                              : MColors.black,
+                                          color: dark ? MColors.white : MColors.black,
                                         ),
-                                      )
+                                      ),
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
                               const SizedBox(
@@ -236,260 +259,11 @@ class Doc_booking extends StatelessWidget {
                         ),
                       ),
                     );
-
-                    //  ListTile(
-                    //   onTap: () => Get.to(
-                    //     () => AppointmentDetailsView(
-                    //       doc: data[index],
-                    //     ),
-                    //   ),
-                    //   leading: const CircleAvatar(
-                    //     backgroundImage:
-                    //         AssetImage("assets/images/doctoricon.png"),
-                    //   ),
-                    //   title: AppStyle.bold(
-                    //       title: data![index]
-                    //           [!isDoctor ? 'appWithName' : 'appName']),
-                    //   subtitle: AppStyle.normal(
-                    //     title:
-                    //         "${data[index]['appDay']} - ${data[index]['appTime']}",
-                    //     color: Colors.black.withOpacity(0.5),
-                    //   ),
-                    // );
                   },
                 ),
               );
             }
           }),
     );
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }
-
-/**
- *
- * Container(
-    padding: const EdgeInsets.symmetric(vertical: 5),
-    decoration: BoxDecoration(
-    color: dark ? MColors.darkContainer : MColors.white,
-    borderRadius: BorderRadius.circular(10),
-    boxShadow: const [
-    BoxShadow(
-    color: Colors.black12,
-    blurRadius: 4,
-    spreadRadius: 2,
-    ),
-    ]),
-    child: SizedBox(
-    width: size.width,
-    child: Column(
-    children: [
-    ListTile(
-    title: Text(
-    data![index],
-    style: Theme.of(context).textTheme.bodyLarge!.apply(
-    color: dark ? MColors.white : MColors.black,
-    ),
-    ),
-    subtitle: Text(
-    "${data[index]['appDay']} - ${data[index]['appTime']}",
-    style: Theme.of(context).textTheme.labelSmall!.apply(
-    color: dark ? MColors.white : MColors.black,
-    ),
-    ),
-    leading: const CircleAvatar(
-    radius: 25,
-    backgroundImage: AssetImage("assets/images/doctoricon.png"),
-    ),
-    ),
-    const Padding(
-    padding: EdgeInsets.symmetric(horizontal: 15),
-    child: Divider(
-    thickness: 1,
-    height: 20,
-    ),
-    ),
-    Row(
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
-    children: [
-    Row(
-    children: [
-    Icon(
-    Icons.calendar_month,
-    color: dark ? MColors.white : MColors.black,
-    ),
-    const SizedBox(
-    width: TSizes.xs,
-    ),
-    Text(
-    "9/12/2023",
-    style: TextStyle(
-    color: dark ? MColors.white : MColors.black,
-    ),
-    )
-    ],
-    ),
-    Row(
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
-    children: [
-    Row(
-    children: [
-    Icon(
-    Icons.access_time_filled,
-    color: dark ? MColors.white : MColors.black,
-    ),
-    const SizedBox(
-    width: TSizes.xs,
-    ),
-    Text(
-    "12:21 PM",
-    style: TextStyle(
-    color: dark ? MColors.white : MColors.black,
-    ),
-    )
-    ],
-    ),
-    ],
-    ),
-    Row(
-    children: [
-    Container(
-    padding: const EdgeInsets.all(5),
-    decoration: const BoxDecoration(
-    color: Colors.green, shape: BoxShape.circle),
-    ),
-    const SizedBox(
-    width: TSizes.xs,
-    ),
-    Text(
-    "Confirmed",
-    style: TextStyle(
-    color: dark ? MColors.white : MColors.black,
-    ),
-    )
-    ],
-    )
-    ],
-    ),
-    const SizedBox(
-    height: TSizes.md,
-    ),
-    Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-    InkWell(
-    onTap: () {},
-    child: Container(
-    width: 140,
-    padding: const EdgeInsets.symmetric(vertical: 12),
-    decoration: BoxDecoration(
-    color: dark ? MColors.grey : const Color(0xffD3E6FF),
-    borderRadius: BorderRadius.circular(40)),
-    child: const Center(
-    child: Text(
-    "Cancel",
-    style: TextStyle(color: MColors.primary),
-    )),
-    ),
-    ),
-    InkWell(
-    onTap: () {},
-    child: Container(
-    width: 140,
-    padding: const EdgeInsets.symmetric(vertical: 12),
-    decoration: BoxDecoration(
-    color: MColors.primary,
-    borderRadius: BorderRadius.circular(40)),
-    child: const Center(
-    child: Text(
-    "Rescedule",
-    style: TextStyle(color: MColors.white),
-    )),
-    ),
-    )
-    ],
-    ),
-    const SizedBox(
-    height: TSizes.md,
-    ),
-    ],
-    ),
-    ),
-    );
- *
- *
- *
- *
- *
- * class AppointmentView extends StatelessWidget {
-    final bool isDoctor;
-    const AppointmentView({super.key, this.isDoctor = false});
-
-    @override
-    Widget build(BuildContext context) {
-    var controller = Get.put(AppointmnetController());
-    return Scaffold(
-    appBar: AppBar(
-    backgroundColor: Colors.blue,
-    title: AppStyle.bold(
-    size: 18,
-    title: "Appoinments",
-    color: AppColor.whiteColor,
-    ),
-    actions: [
-    IconButton(
-    onPressed: () {
-    AuthController().signout();
-    },
-    icon: const Icon(Icons.power_settings_new_rounded))
-    ],
-    ),
-    body: FutureBuilder<QuerySnapshot>(
-    future: controller.getAppointments(isDoctor),
-    builder:
-    (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    if (!snapshot.hasData) {
-    return const Center(
-    child: CircularProgressIndicator(),
-    );
-    } else {
-    var data = snapshot.data?.docs;
-
-    return Padding(
-    padding: const EdgeInsets.all(10.0),
-    child: ListView.builder(
-    itemCount: data?.length ?? 0,
-    itemBuilder: (BuildContext context, int index) {
-    return ListTile(
-    onTap: () => Get.to(
-    () => AppointmentDetailsView(
-    doc: data[index],
-    ),
-    ),
-    leading: const CircleAvatar(
-    backgroundImage:
-    AssetImage("assets/images/doctoricon.png"),
-    ),
-    title: AppStyle.bold(
-    title: data![index]
-    [!isDoctor ? 'appWithName' : 'appName']),
-    subtitle: AppStyle.normal(
-    title:
-    "${data[index]['appDay']} - ${data[index]['appTime']}",
-    color: Colors.black.withOpacity(0.5),
-    ),
-    );
-    },
-    ),
-    );
-    }
-    },
-    ));
-    }
-    }
-
- *
- */

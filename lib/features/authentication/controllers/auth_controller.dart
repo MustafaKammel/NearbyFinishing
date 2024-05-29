@@ -10,6 +10,8 @@ import 'package:graduateproject/features/authentication/screens/login/login_view
 import 'package:graduateproject/utils/helpers/helper_functions.dart';
 import 'package:graduateproject/views/doctor/doctor_navigationMenue/navigation_view.dart';
 
+import '../../Onboboarding/onboarding_view.dart';
+
 class AuthController extends GetxController {
   var fullnameController = TextEditingController();
   var emailController = TextEditingController();
@@ -56,7 +58,7 @@ class AuthController extends GetxController {
           Get.offAll(() => const NavigationMenu());
         }
       } else {
-        Get.offAll(() => const LoginView());
+        Get.offAll(() => const OnboardingView());
       }
     });
   }

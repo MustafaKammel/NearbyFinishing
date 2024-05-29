@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:graduateproject/features/Notifications/notification_screen.dart';
 import 'package:graduateproject/utils/consts/consts.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -86,7 +87,7 @@ class _SettigsViewState extends State<SettigsView> {
                               .apply(color: MColors.white)),
                       trailing: IconButton(
                           onPressed: () {
-                            Get.to(() => const ProfileScreen());
+                            Get.to(() =>  ProfileScreen());
                           },
                           icon: const Icon(
                             Iconsax.edit,
@@ -115,64 +116,68 @@ class _SettigsViewState extends State<SettigsView> {
                       icon: Iconsax.book,
                       title: 'My Appointments',
                       subtitle: 'Set of your Appointments',
-                      ontap: () => Get.to(() => const Upcomingschedule()),
+                      ontap: () => Get.to(() =>  Upcomingschedule()),
                     ),
                     SettingMenuTiles(
                       icon: Iconsax.notification,
                       title: 'Notification',
                       subtitle: 'set any kind of Notification messages',
-                      ontap: () {},
+                      ontap: () {
+                        Get.to(() =>  NotificationScreen());
+                      },
                     ),
-                    SettingMenuTiles(
-                      icon: Iconsax.security_card,
-                      title: 'Account Privacy',
-                      subtitle:
-                      'manage data usage and connected accounts',
-                      ontap: () {},
-                    ),
+                    // SettingMenuTiles(
+                    //   icon: Iconsax.security_card,
+                    //   title: 'Account Privacy',
+                    //   subtitle:
+                    //   'manage data usage and connected accounts',
+                    //   ontap: () {
+                    //
+                    //   },
+                    // ),
                     const SizedBox(
                       height: TSizes.spaceBtwSections,
                     ),
-                    const SectionHeading(
-                      title: "App Setting",
-                      showActionButton: false,
-                    ),
-                    const SizedBox(
-                      height: TSizes.spaceBtwItems,
-                    ),
-                    SettingMenuTiles(
-                      icon: Iconsax.document_upload,
-                      title: 'Load Data',
-                      subtitle: 'upload data to your cloud firebase',
-                      ontap: () {},
-                    ),
-                    SettingMenuTiles(
-                      icon: Iconsax.location,
-                      title: 'Geolocation',
-                      subtitle: 'set recommandaion based on location',
-                      trailing: Switch(
-                        value: true,
-                        onChanged: (value) {},
-                      ),
-                    ),
-                    SettingMenuTiles(
-                      icon: Iconsax.security_user,
-                      title: 'safe mode',
-                      subtitle: 'set recommandaion based on location',
-                      trailing: Switch(
-                        value: false,
-                        onChanged: (value) {},
-                      ),
-                    ),
-                    SettingMenuTiles(
-                      icon: Iconsax.image,
-                      title: 'HD Image Quality',
-                      subtitle: 'set image quality to been seen',
-                      trailing: Switch(
-                        value: false,
-                        onChanged: (value) {},
-                      ),
-                    ),
+                    // const SectionHeading(
+                    //   title: "App Setting",
+                    //   showActionButton: false,
+                    // ),
+                    // const SizedBox(
+                    //   height: TSizes.spaceBtwItems,
+                    // ),
+                    // SettingMenuTiles(
+                    //   icon: Iconsax.document_upload,
+                    //   title: 'Load Data',
+                    //   subtitle: 'upload data to your cloud firebase',
+                    //   ontap: () {},
+                    // ),
+                    // SettingMenuTiles(
+                    //   icon: Iconsax.location,
+                    //   title: 'Geolocation',
+                    //   subtitle: 'set recommandaion based on location',
+                    //   trailing: Switch(
+                    //     value: true,
+                    //     onChanged: (value) {},
+                    //   ),
+                    // ),
+                    // SettingMenuTiles(
+                    //   icon: Iconsax.security_user,
+                    //   title: 'safe mode',
+                    //   subtitle: 'set recommandaion based on location',
+                    //   trailing: Switch(
+                    //     value: false,
+                    //     onChanged: (value) {},
+                    //   ),
+                    // ),
+                    // SettingMenuTiles(
+                    //   icon: Iconsax.image,
+                    //   title: 'HD Image Quality',
+                    //   subtitle: 'set image quality to been seen',
+                    //   trailing: Switch(
+                    //     value: false,
+                    //     onChanged: (value) {},
+                    //   ),
+                    // ),
                     const SizedBox(
                       height: TSizes.spaceBtwSections,
                     ),

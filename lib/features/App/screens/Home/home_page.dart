@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:graduateproject/features/Notifications/notifications_services.dart';
 import 'package:graduateproject/features/authentication/controllers/home_controller.dart';
 import 'package:graduateproject/utils/constants/colors.dart';
 import 'package:graduateproject/utils/constants/sizes.dart';
@@ -32,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _controller = Get.put(HomeController());
     _checkInternetConnection();
+    NotificationsServices().showBasicNotification();
   }
 
   Future<void> _checkInternetConnection() async {
@@ -75,7 +77,7 @@ class _HomePageState extends State<HomePage> {
               height: 380,
               child: Column(
                 children: [
-                  const HomeAppBar(),
+                   HomeAppBar(),
                   const SizedBox(
                     height: TSizes.spaceBtwSections,
                   ),

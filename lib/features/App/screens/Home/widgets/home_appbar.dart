@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:graduateproject/features/Notifications/notification_screen.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../../../../common/widgets/app_bar/appbar.dart';
@@ -47,7 +48,9 @@ class HomeAppBar extends StatelessWidget {
       ),
       actions: [
         AppointmentCounterIcon(
-          onpressed: () {},
+          onpressed: () {
+                Navigator.push(context,MaterialPageRoute(builder: (_)=>NotificationScreen()));
+          },
           iconColor: MColors.white,
         ),
       ],

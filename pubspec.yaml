@@ -37,6 +37,9 @@ dependencies:
   firebase_core: ^2.31.0
   favorite_button: ^0.0.3
   lottie: ^1.2.2
+  url_launcher: ^6.0.20
+  flutter_local_notifications: ^17.1.2
+  timeago: ^3.2.0
 
   #  flutter_native_splash: ^2.4.0
   flutter:
@@ -114,6 +117,10 @@ flutter:
     - assets/Animations/
     - assets/Animations/Sad.json
     - assets/Animations/Sad2.json
+    - assets/Animations/Sad3.json
+    - assets/lood research.gif
+    - assets/Doctors.gif
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

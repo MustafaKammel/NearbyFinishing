@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:graduateproject/utils/constants/colors.dart';
-import 'package:graduateproject/utils/consts/consts.dart';
-import 'package:graduateproject/utils/consts/strings.dart';
 import 'package:graduateproject/utils/helpers/helper_functions.dart';
 import 'package:graduateproject/views/book_appointment_view/book_appointment_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../common/widgets/app_bar/appbar.dart';
 import '../../utils/constants/text_strings.dart';
@@ -29,13 +29,13 @@ class DoctorProfileView extends StatelessWidget {
           "Doctor Details",
           style: dark
               ? Theme.of(context)
-                  .textTheme
-                  .headlineMedium!
-                  .apply(color: MColors.white)
+              .textTheme
+              .headlineMedium!
+              .apply(color: MColors.white)
               : Theme.of(context)
-                  .textTheme
-                  .headlineMedium!
-                  .apply(color: MColors.black),
+              .textTheme
+              .headlineMedium!
+              .apply(color: MColors.black),
         ),
       ),
       body: SingleChildScrollView(
@@ -88,8 +88,12 @@ class DoctorProfileView extends StatelessWidget {
                           size: 25,
                         ),
                         onPressed: () async {
-                          // await FlutterPhoneDirectCaller.callNumber(
-                          //     doc['docPhone'].toString());
+                          final url = 'tel:${doc['docPhone']}';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
                         },
                       ),
                     ),
@@ -142,14 +146,7 @@ class DoctorProfileView extends StatelessWidget {
                           const SizedBox(
                             height: 5,
                           ),
-                          VxRating(
-                            onRatingUpdate: (value) {},
-                            maxRating: 5,
-                            count: 5,
-                            value: double.parse(doc['docRating'].toString()),
-                            stepInt: true,
-                            selectionColor: Colors.yellowAccent,
-                          ),
+                          // استخدم أداة التقييم التي ترغب بها هنا
                           const SizedBox(
                             height: 10,
                           ),
@@ -173,7 +170,7 @@ class DoctorProfileView extends StatelessWidget {
                             height: 10,
                           ),
                           const Text(
-                            "phone Number",
+                            "Phone Number",
                             style: TextStyle(
                               color: MColors.black,
                               fontSize: 18,
@@ -187,9 +184,6 @@ class DoctorProfileView extends StatelessWidget {
                             doc['docPhone'],
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.black54),
-                          ),
-                          const SizedBox(
-                            height: 10,
                           ),
                           const SizedBox(
                             height: 10,
@@ -209,9 +203,6 @@ class DoctorProfileView extends StatelessWidget {
                             doc['docEmail'],
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.black54),
-                          ),
-                          const SizedBox(
-                            height: 10,
                           ),
                           const SizedBox(
                             height: 10,
@@ -289,9 +280,6 @@ class DoctorProfileView extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
                           const Text(
                             "Location",
                             style: TextStyle(
@@ -315,8 +303,7 @@ class DoctorProfileView extends StatelessWidget {
                             ),
                             title: Text(
                               doc['docAddress'],
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: const Text(
                               "address line of the medical center",
@@ -341,7 +328,7 @@ class DoctorProfileView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "Consultation price",
                   style: TextStyle(
                     color: Colors.black54,
@@ -349,7 +336,7 @@ class DoctorProfileView extends StatelessWidget {
                 ),
                 Text(
                   "${doc['docSalary']} LE",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     color: Colors.green,
                     fontWeight: FontWeight.bold,
@@ -365,13 +352,13 @@ class DoctorProfileView extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: () async {
                   Get.to(() => BookAppointmentView(
-                        docId: doc['docId'],
-                        docName: doc['docName'],
-                        amount: double.parse(
-                          doc['docSalary'].toString(),
-                        ),
-                        Services: doc['docService'],
-                      ));
+                    docId: doc['docId'],
+                    docName: doc['docName'],
+                    amount: double.parse(
+                      doc['docSalary'].toString(),
+                    ),
+                    Services: doc['docService'],
+                  ));
                 },
                 child: const Text(
                   TTexts.bookAppointment,
@@ -385,4 +372,3 @@ class DoctorProfileView extends StatelessWidget {
     );
   }
 }
-

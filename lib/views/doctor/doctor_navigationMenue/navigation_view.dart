@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:graduateproject/features/Notifications/notification_screen.dart';
 import 'package:graduateproject/utils/constants/colors.dart';
 import 'package:graduateproject/utils/helpers/helper_functions.dart';
 import 'package:graduateproject/views/doctor/doctor_views/doctor_booking.dart';
@@ -43,7 +44,9 @@ class _DocnavigationmenuState extends State<Docnavigationmenu> {
               : MColors.black.withOpacity(0.1),
           destinations: const [
             NavigationDestination(icon: Icon(Iconsax.book), label: 'schedule'),
-            NavigationDestination(icon: Icon(Iconsax.message), label: 'chat'),
+            NavigationDestination(icon: Icon(Iconsax.notification), label: 'notifications'),
+            NavigationDestination(
+                icon: Icon(Iconsax.message), label: 'chat'),
             NavigationDestination(icon: Icon(Iconsax.user), label: 'settings'),
           ],
         ),
@@ -57,6 +60,7 @@ class NavigationController extends GetxController {
 
   final screens = [
     const Doc_booking(),
+    NotificationScreen(),
     const Doc_chat(),
     const Doc_Settings(),
   ];

@@ -65,7 +65,7 @@ class NavigationController extends GetxController {
   final screens = [
     const HomePage(),
     //const AppointmentView(),
-    const Upcomingschedule(),
+     Upcomingschedule(),
     const CategoryView(),
     const ChatScreens(),
     const FavoriteScreen(),

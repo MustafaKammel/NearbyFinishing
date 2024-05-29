@@ -9,41 +9,46 @@ import '../../../../../../../common/widgets/common_images/rounded_image.dart';
 import '../../../../../../../utils/constants/image_string.dart';
 import '../../../../../../../utils/constants/sizes.dart';
 
-
 class PromoSlider extends StatelessWidget {
   const PromoSlider({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeController());
+    final List<Widget> imgList = [
+      const RoundedImage(
+        imagUrl: TImages.PromoBanner2,
+      ),
+      const RoundedImage(
+        imagUrl: TImages.PromoBanner2,
+      ),
+      const RoundedImage(
+        imagUrl: TImages.PromoBanner3,
+      ),
+    ];
+
     return Column(
       children: [
         CarouselSlider(
-            options: CarouselOptions(
-              onPageChanged: (index, context) =>
-                  controller.updatePageIndicator(index),
-              viewportFraction: 1,
-            ),
-            items: const [
-              RoundedImage(
-                imagUrl: TImages.PromoBanner2,
-              ),
-              RoundedImage(
-                imagUrl: TImages.PromoBanner2,
-              ),
-              RoundedImage(
-                imagUrl: TImages.PromoBanner3,
-              ),
-            ]),
+          options: CarouselOptions(
+            onPageChanged: (index, context) => controller.updatePageIndicator(index),
+            viewportFraction: 1,
+            autoPlay: true,
+            autoPlayInterval: const Duration(seconds: 3),
+            autoPlayAnimationDuration: const Duration(milliseconds: 800),
+            autoPlayCurve: Curves.fastOutSlowIn,
+          ),
+          items: imgList,
+        ),
         const SizedBox(
           height: TSizes.spaceBtwItems,
         ),
         Center(
           child: Obx(
-            () => Row(
+                () => Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < imgList.length; i++)
                   CircularContainer(
                     width: 20,
                     height: 4,

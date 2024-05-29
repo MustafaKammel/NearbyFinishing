@@ -30,17 +30,13 @@ class AppointmentCounterIcon extends StatelessWidget {
             height: 18,
             width: 18,
             decoration: BoxDecoration(
-              color: MColors.black,
+              color:Colors.red ,
               borderRadius: BorderRadius.circular(100),
             ),
-            child: Center(
-              child: Text(
-                "2",
-                style: Theme.of(context)
-                    .textTheme
-                    .labelLarge!
-                    .apply(color: MColors.white, fontSizeFactor: 0.8),
-              ),
+            child: Builder(
+              builder: (context) {
+                return Container();
+              }
             ),
           ),
         )

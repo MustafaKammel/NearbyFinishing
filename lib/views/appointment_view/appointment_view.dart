@@ -20,7 +20,7 @@ class AppointmentView extends StatefulWidget {
 class _AppointmentViewState extends State<AppointmentView> {
   int buttonIndex = 0;
   final schedule = [
-    const Upcomingschedule(),
+     Upcomingschedule(),
     const Completedschedule(),
     const Canceledschedule(),
   ];

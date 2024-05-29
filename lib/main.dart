@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:graduateproject/app.dart';
+import 'package:graduateproject/features/Notifications/notifications_services.dart';
 import 'package:graduateproject/features/authentication/controllers/auth_controller.dart';
 import 'package:graduateproject/views/payment/stripe_payment/stripe_keys.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -14,6 +15,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((value) => Get.put(AuthController()));
   Stripe.publishableKey = ApiKeys.publishableKey;
-  initializeDateFormatting()
-      .then((_) => runApp(const MyApp()));
+  initializeDateFormatting().then((_) => runApp(const MyApp()));
+  NotificationsServices().init();
+
+
 }
