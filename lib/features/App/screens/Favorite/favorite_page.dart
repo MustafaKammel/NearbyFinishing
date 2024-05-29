@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import '../../../../common/widgets/Doctors/doctor_card_vertical.dart';
 import '../../../../views/doctor_profile_view/doctor_profile_view.dart';
 import '../../../authentication/controllers/home_controller.dart';
@@ -50,7 +51,19 @@ class FavoriteScreen extends StatelessWidget {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text('No favorite doctors found.'));
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset('assets/Animations/Sad.json'),
+                        SizedBox(height: 20),
+                        Text(
+                          'No favorite doctors found!',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  );
                 }
                 var data = snapshot.data?.docs ?? [];
                 return Padding(

@@ -36,6 +36,8 @@ dependencies:
   firebase_auth: ^4.17.8
   firebase_core: ^2.31.0
   favorite_button: ^0.0.3
+  lottie: ^1.2.2
+
   #  flutter_native_splash: ^2.4.0
   flutter:
     sdk: flutter
@@ -109,7 +111,9 @@ flutter:
     - assets/images/
     - assets/icons/login.png
     - assets/icons/
-
+    - assets/Animations/
+    - assets/Animations/Sad.json
+    - assets/Animations/Sad2.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

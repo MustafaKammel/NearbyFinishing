@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import '../../../../../common/widgets/app_bar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
@@ -47,15 +48,17 @@ class Upcomingschedule extends StatelessWidget {
             } else {
               var data = snapshot.data?.docs;
               if (data!.isEmpty) {
-                return Center(
-                  child: Text(
-                    'No appointments!',
-                    style: TextStyle(
-                      fontSize: 18, // Adjust font size as needed
-                      fontWeight: FontWeight.bold, // Make the text bold
-                      color: Colors.grey[600], // Set text color to grey
-                    ),
-                    textAlign: TextAlign.center, // Center-align the text
+                return  Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset('assets/Animations/Sad2.json'),
+                      SizedBox(height: 20),
+                      Text(
+                        'No appointments found!',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
                   ),
                 );
               }

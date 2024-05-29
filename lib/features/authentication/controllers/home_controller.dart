@@ -49,7 +49,6 @@ class HomeController extends GetxController {
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
   }
-
   Future<QuerySnapshot<Map<String, dynamic>>> getDoctorList() async {
     var doctors = FirebaseFirestore.instance.collection('doctors').get();
     return doctors;

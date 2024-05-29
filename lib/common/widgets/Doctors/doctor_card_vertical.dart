@@ -11,6 +11,7 @@ import '../common_images/rounded_image.dart';
 import '../custom_shapes/contianers/rounded_container.dart';
 import '../texts/doctor_title_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DoctorCardVertical extends StatefulWidget {
   const DoctorCardVertical({
@@ -35,11 +36,27 @@ class DoctorCardVertical extends StatefulWidget {
 class _DoctorCardVerticalState extends State<DoctorCardVertical> {
   late bool _isFavorite;
   final controller = Get.put(HomeController());
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void initState() {
     super.initState();
     _isFavorite = widget.isFavorite;
+    _loadFavoriteStatus();
+  }
+
+  Future<void> _loadFavoriteStatus() async {
+    var userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('favorites')
+        .doc(widget.docId)
+        .get();
+    if (userDoc.exists) {
+      setState(() {
+        _isFavorite = userDoc.data()!['isFavorite'] ?? false;
+      });
+    }
   }
 
   void _toggleFavorite() async {
